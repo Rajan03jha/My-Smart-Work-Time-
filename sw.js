@@ -1,4 +1,4 @@
-const CACHE='hospital-bed-manager-v3';
+const CACHE='hospital-bed-manager-v5';
 const SHELL=['./','./index.html','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
 const LIBS=['https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(async c=>{
