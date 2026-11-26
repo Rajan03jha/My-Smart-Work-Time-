@@ -1,0 +1,1 @@
+Replace index.html and sw.js in your GitHub Pages repository root. Backup your app data before clearing browser storage. Commit both files and wait for deployment.
