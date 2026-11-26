@@ -1,7 +1,2 @@
-Hospital Bed Manager V8 - Zone → Floor → Room → Patient Detail navigation.
-
-Upload index.html and sw.js to the root of your GitHub Pages repository and commit.
-Existing local data format and storage key are preserved. Backup before replacing files.
-
-Room Explorer: choose Zone, then Floor, then Room to see all bed/patient details.
-This browser-local app is a demonstration/organizer, not an approved encrypted medical record system.
+Hospital Bed Manager update V8
+Replace index.html and sw.js in the GitHub Pages repository. Preserve any existing user data in the browser; do not clear site storage. This update includes natural room sorting, the existing Zone/Floor/Room/Bed explorer, removal of Duty Timer UI, and the QR generator library fix. QR handover payloads may still exceed QR capacity for large records; use Backup JSON in that case.
