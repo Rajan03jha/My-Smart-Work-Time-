@@ -1,17 +1,43 @@
-const CACHE='hospital-bed-manager-v7';
-const SHELL=['./','./index.html','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
-const LIBS=['https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
-self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(async c=>{
-  await c.addAll(SHELL);
-  // QR libraries भी ऑफ़लाइन के लिए सेव करें; न मिलें तो इंस्टॉल न रुके
-  await Promise.allSettled(LIBS.map(u=>fetch(u,{mode:'no-cors'}).then(r=>c.put(u,r))));
-}).then(()=>self.skipWaiting())));
-self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',event=>{
-  const req=event.request;
-  if(req.method!=='GET')return;
-  event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(resp=>{
-    if(resp.ok&&new URL(req.url).origin===location.origin){const copy=resp.clone();caches.open(CACHE).then(c=>c.put(req,copy));}
-    return resp;
-  }).catch(()=>req.mode==='navigate'?caches.match('./index.html'):Response.error())));
+const CACHE_NAME = 'hospital-bed-manager-v8-20261126';
+const APP_SHELL = ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png'];
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    try { await cache.addAll(APP_SHELL); } catch (e) { /* cache available assets only */ }
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k.startsWith('hospital-bed-manager-') && k !== CACHE_NAME).map(k => caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  const isHTML = req.mode === 'navigate' || req.destination === 'document' || req.url.endsWith('/index.html');
+  if (isHTML) {
+    event.respondWith((async () => {
+      try {
+        const fresh = await fetch(req, {cache:'no-store'});
+        const cache = await caches.open(CACHE_NAME);
+        cache.put('./index.html', fresh.clone());
+        return fresh;
+      } catch (err) {
+        return (await caches.match(req)) || (await caches.match('./index.html')) || Response.error();
+      }
+    })());
+    return;
+  }
+  event.respondWith((async () => {
+    const cached = await caches.match(req);
+    if (cached) return cached;
+    try {
+      const fresh = await fetch(req);
+      if (fresh.ok) (await caches.open(CACHE_NAME)).put(req, fresh.clone());
+      return fresh;
+    } catch (err) { return cached || Response.error(); }
+  })());
 });
