@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hospital-bed-manager-v9-20261126';
+const CACHE_NAME = 'hospital-bed-manager-v10-20261126';
 const APP_SHELL = ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil((async () => {

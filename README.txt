@@ -1,1 +1,1 @@
-Replace index.html and sw.js in your GitHub Pages repository root. Backup your app data before clearing browser storage. Commit both files and wait for deployment.
+Hospital Bed Manager V6 update. Replace index.html and sw.js in the GitHub Pages repository root, commit both files, and wait for deployment. The update fixes script order (calendar extension), section navigation, active tab state, and service-worker cache version. Backup local app data before clearing site storage.
